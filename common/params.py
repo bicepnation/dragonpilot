@@ -110,7 +110,6 @@ keys = {
   "Offroad_IsTakingSnapshot": [TxType.CLEAR_ON_MANAGER_START],
   #dragonpilot config
   "DragonEnableDashcam": [TxType.PERSISTENT],
-  "DragonEnableDriverSafetyCheck": [TxType.PERSISTENT],
   "DragonEnableAutoShutdown": [TxType.PERSISTENT],
   "DragonAutoShutdownAt": [TxType.PERSISTENT],
   "DragonEnableSteeringOnSignal": [TxType.PERSISTENT],

@@ -7,7 +7,6 @@ import subprocess
 
 default_conf = {
   'DragonEnableDashcam': '0',
-  'DragonEnableDriverSafetyCheck': '1',
   'DragonEnableAutoShutdown': '1',
   'DragonAutoShutdownAt': '0', # in minute
   'DragonEnableSteeringOnSignal': '0',
