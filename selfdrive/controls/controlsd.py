@@ -39,13 +39,14 @@ LaneChangeDirection = log.PathPlan.LaneChangeDirection
 
 
 def add_lane_change_event(events, path_plan):
+  postfix = 'ALC' if path_plan.alcAllowed else ''
   if path_plan.laneChangeState == LaneChangeState.preLaneChange:
     if path_plan.laneChangeDirection == LaneChangeDirection.left:
-      events.append(create_event('preLaneChangeLeft', [ET.WARNING]))
+      events.append(create_event(f"preLaneChangeLeft{postfix}", [ET.WARNING]))
     else:
-      events.append(create_event('preLaneChangeRight', [ET.WARNING]))
+      events.append(create_event(f"preLaneChangeRight{postfix}", [ET.WARNING]))
   elif path_plan.laneChangeState in [LaneChangeState.laneChangeStarting, LaneChangeState.laneChangeFinishing]:
-      events.append(create_event('laneChange', [ET.WARNING]))
+      events.append(create_event(f"laneChange{postfix}", [ET.WARNING]))
 
 
 def isActive(state):
