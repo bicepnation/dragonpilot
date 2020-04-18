@@ -10,6 +10,7 @@ import subprocess
 import datetime
 import textwrap
 from selfdrive.swaglog import cloudlog, add_logentries_handler
+from selfdrive.dragonpilot.dragonconf import dragonpilot_set_params
 
 from common.basedir import BASEDIR, PARAMS
 from common.android import ANDROID
@@ -188,6 +189,10 @@ managed_processes = {
   "dmonitoringmodeld": ("selfdrive/modeld", ["./dmonitoringmodeld"]),
   "modeld": ("selfdrive/modeld", ["./modeld"]),
   "driverview": "selfdrive.controls.lib.driverview",
+  # dp
+  "dashcamd": "selfdrive.dragonpilot.dashcamd.dashcamd",
+  "shutdownd": "selfdrive.dragonpilot.shutdownd.shutdownd",
+  "appd": "selfdrive.dragonpilot.appd.appd",
 }
 
 daemon_processes = {
@@ -222,6 +227,8 @@ if ANDROID:
     'logcatd',
     'tombstoned',
     'updated',
+    'shutdownd',
+    'appd',
   ]
 
 car_started_processes = [
@@ -251,6 +258,7 @@ if ANDROID:
     'gpsd',
     'dmonitoringmodeld',
     'deleter',
+    'dashcamd',
   ]
 
 def register_managed_process(name, desc, car_started=False):
@@ -566,6 +574,9 @@ def main():
   for k, v in default_params:
     if params.get(k) is None:
       params.put(k, v)
+
+  # dp
+  dragonpilot_set_params(params)
 
   # is this chffrplus?
   if os.getenv("PASSIVE") is not None:
