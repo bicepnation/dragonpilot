@@ -82,6 +82,18 @@ const int home_btn_w = 180;
 const int home_btn_x = 60;
 const int home_btn_y = vwp_h - home_btn_h - 40;
 
+// dp
+// dynamic follow btn
+const int df_btn_h = 180;
+const int df_btn_w = 180;
+const int df_btn_x = 1650;
+const int df_btn_y = 750;
+// accel profile btn
+const int ap_btn_h = 180;
+const int ap_btn_w = 180;
+const int ap_btn_x = 1450;
+const int ap_btn_y = 750;
+
 const int UI_FREQ = 30;   // Hz
 
 const int MODEL_PATH_MAX_VERTICES_CNT = 98;
@@ -305,6 +317,13 @@ typedef struct UIState {
   model_path_vertices_data model_path_vertices[MODEL_LANE_PATH_CNT * 2];
 
   track_vertices_data track_vertices[2];
+
+  // dp
+  int dragon_df_mode_timeout;
+  int dragon_ap_mode_timeout;
+
+  uint64_t dragon_df_mode;
+  uint64_t dragon_ap_mode;
 } UIState;
 
 // API

@@ -702,6 +702,46 @@ static void ui_draw_vision_face(UIState *s) {
   ui_draw_image(s->vg, face_img_x, face_img_y, face_img_size, face_img_size, s->img_face, face_img_alpha);
 }
 
+static void ui_draw_df_button(UIState *s) {
+  nvgBeginPath(s->vg);
+  nvgRoundedRect(s->vg, df_btn_x, df_btn_y, df_btn_w, df_btn_h, 20);
+  nvgStrokeColor(s->vg, COLOR_WHITE_ALPHA(80));
+  nvgStrokeWidth(s->vg, 6);
+  nvgStroke(s->vg);
+
+  nvgFontFaceId(s->vg,  s->font_sans_regular);
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
+  nvgFontSize(s->vg, 48);
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgText(s->vg, df_btn_x + df_btn_w / 2, df_btn_y + df_btn_h / 2, s->dragon_df_mode == -1? "LONG" : s->dragon_df_mode == 0? "NORMAL" : "SHORT", NULL);
+
+  nvgFontFaceId(s->vg,  s->font_sans_regular);
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
+  nvgFontSize(s->vg, 37.5);
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgText(s->vg, df_btn_x + df_btn_w / 2, df_btn_y + df_btn_h - 10, "FOLLOW", NULL);
+}
+
+static void ui_draw_ap_button(UIState *s) {
+  nvgBeginPath(s->vg);
+  nvgRoundedRect(s->vg, ap_btn_x, ap_btn_y, ap_btn_w, ap_btn_h, 20);
+  nvgStrokeColor(s->vg, COLOR_WHITE_ALPHA(80));
+  nvgStrokeWidth(s->vg, 6);
+  nvgStroke(s->vg);
+
+  nvgFontFaceId(s->vg,  s->font_sans_regular);
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
+  nvgFontSize(s->vg, 48);
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgText(s->vg, ap_btn_x + ap_btn_w / 2, ap_btn_y + ap_btn_h / 2, s->dragon_ap_mode == -1? "ECO" : s->dragon_ap_mode == 0? "NORMAL" : "SPORT", NULL);
+
+  nvgFontFaceId(s->vg,  s->font_sans_regular);
+  nvgFillColor(s->vg, COLOR_WHITE_ALPHA(200));
+  nvgFontSize(s->vg, 37.5);
+  nvgTextAlign(s->vg, NVG_ALIGN_CENTER);
+  nvgText(s->vg, ap_btn_x + ap_btn_w / 2, ap_btn_y + ap_btn_h - 10, "ACCEL", NULL);
+}
+
 static void ui_draw_driver_view(UIState *s) {
   const UIScene *scene = &s->scene;
   s->scene.uilayout_sidebarcollapsed = true;
@@ -812,6 +852,12 @@ static void ui_draw_vision_header(UIState *s) {
 
   ui_draw_vision_maxspeed(s);
 
+  if (!s->dragon_waze_mode && s->dragon_df_mode > -2) {
+    ui_draw_df_button(s);
+  }
+  if (!s->dragon_waze_mode && s->dragon_ap_mode > -2) {
+    ui_draw_ap_button(s);
+  }
 #ifdef SHOW_SPEEDLIMIT
   ui_draw_vision_speedlimit(s);
 #endif

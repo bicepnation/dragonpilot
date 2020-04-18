@@ -138,6 +138,46 @@ static void handle_driver_view_touch(UIState *s, int touch_x, int touch_y) {
   int err = write_db_value(NULL, "IsDriverViewEnabled", "0", 1);
 }
 
+static bool handle_df_touch(UIState *s, int touch_x, int touch_y) {
+  //dfButton manager  // code below thanks to kumar: https://github.com/arne182/openpilot/commit/71d5aac9f8a3f5942e89634b20cbabf3e19e3e78
+  if (s->awake && s->vision_connected && s->active_app == cereal_UiLayoutState_App_home && s->status != STATUS_STOPPED) {
+    if (touch_x >= df_btn_x && touch_x <= (df_btn_x + df_btn_w) && touch_y >= df_btn_y && touch_y <= (df_btn_y + df_btn_h)) {
+      s->scene.uilayout_sidebarcollapsed = true;  // collapse sidebar when tapping df button
+      int val = s->dragon_df_mode;
+      val++;
+      if (val >= 2) {
+        val = -1;
+      }
+      s->dragon_df_mode = val;
+      char val_str[2];
+      sprintf(val_str, "%d", val);
+      write_db_value(NULL, "DragonDynamicFollow", val_str, 2);
+      return true;
+    }
+  }
+  return false;
+}
+
+static bool handle_ap_touch(UIState *s, int touch_x, int touch_y) {
+  //dfButton manager  // code below thanks to kumar: https://github.com/arne182/openpilot/commit/71d5aac9f8a3f5942e89634b20cbabf3e19e3e78
+  if (s->awake && s->vision_connected && s->active_app == cereal_UiLayoutState_App_home && s->status != STATUS_STOPPED) {
+    if (touch_x >= ap_btn_x && touch_x <= (ap_btn_x + ap_btn_w) && touch_y >= ap_btn_y && touch_y <= (ap_btn_y + ap_btn_h)) {
+      s->scene.uilayout_sidebarcollapsed = true;  // collapse sidebar when tapping ap button
+      int val = s->dragon_ap_mode;
+      val++;
+      if (val >= 2) {
+        val = -1;
+      }
+      s->dragon_ap_mode = val;
+      char val_str[2];
+      sprintf(val_str, "%d", val);
+      write_db_value(NULL, "DragonAccelProfile", val_str, 2);
+      return true;
+    }
+  }
+  return false;
+}
+
 static void handle_vision_touch(UIState *s, int touch_x, int touch_y) {
   if (s->started && (touch_x >= s->scene.ui_viz_rx - bdr_s)
     && (s->active_app != cereal_UiLayoutState_App_settings)) {
@@ -333,10 +373,18 @@ static void ui_init_vision(UIState *s, const VisionStreamBufs back_bufs,
   read_param_bool(&s->longitudinal_control, "LongitudinalControl");
   read_param_bool(&s->limit_set_speed, "LimitSetSpeed");
 
+  // dp
+  read_param_uint64(&s->dragon_df_mode, "DragonDynamicFollow");
+  read_param_uint64(&s->dragon_ap_mode, "DragonAccelProfile");
+
   // Set offsets so params don't get read at the same time
   s->longitudinal_control_timeout = UI_FREQ / 3;
   s->is_metric_timeout = UI_FREQ / 2;
   s->limit_set_speed_timeout = UI_FREQ;
+
+  // dp
+  s->dragon_df_mode_timeout = UI_FREQ * 5.0;
+  s->dragon_ap_mode_timeout = UI_FREQ * 5.0;
 }
 
 static PathData read_path(cereal_ModelData_PathData_ptr pathp) {
@@ -1015,9 +1063,18 @@ int main(int argc, char* argv[]) {
     int touch_x = -1, touch_y = -1;
     int touched = touch_poll(&touch, &touch_x, &touch_y, 0);
     if (touched == 1) {
+      bool button_touched = false;
       set_awake(s, true);
-      handle_sidebar_touch(s, touch_x, touch_y);
-      handle_vision_touch(s, touch_x, touch_y);
+      if (s->dragon_df_mode > -2) {
+        button_touched = handle_df_touch(s, touch_x, touch_y);
+      }
+      if (s->dragon_ap_mode > -2) {
+        button_touched = handle_ap_touch(s, touch_x, touch_y);
+      }
+      if (!button_touched)) {
+        handle_sidebar_touch(s, touch_x, touch_y);
+        handle_vision_touch(s, touch_x, touch_y);
+      }
     }
 
     if (!s->started) {
@@ -1114,6 +1171,10 @@ int main(int argc, char* argv[]) {
       s->scene.athenaStatus = NET_ERROR;
     }
     update_offroad_layout_timeout(s, &s->offroad_layout_timeout);
+
+    // dp
+    read_param_uint64_timeout(&s->dragon_df_mode, "DragonDynamicFollow", &s->dragon_df_mode_timeout);
+    read_param_uint64_timeout(&s->dragon_ap_mode, "DragonAccelProfile", &s->dragon_ap_mode_timeout);
 
     pthread_mutex_unlock(&s->lock);
 
