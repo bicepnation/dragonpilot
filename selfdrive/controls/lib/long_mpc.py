@@ -84,7 +84,7 @@ class LongitudinalMpc():
   def get_TR(self, CS):
     # load profile
     ts = sec_since_boot()
-    if ts - self.last_ts >= 10.:
+    if ts - self.last_ts >= 5.:
       modified = dp_get_last_modified()
       if self.last_modified != modified:
         try:

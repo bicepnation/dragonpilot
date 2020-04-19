@@ -12,9 +12,9 @@ from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
 from math import floor
 import re
 import os
-from selfdrive.dragonpilot.common import dp_is_online
+from common.dp import is_online
 
-is_online = dp_is_online()
+is_online = is_online()
 is_gitee_src = "gitee" in subprocess.check_output(["git", "-C", "/data/openpilot", "config", "--get", "remote.origin.url"]).decode('utf8').rstrip()
 auto_update = params.get("DragonAppAutoUpdate", encoding='utf8') == "1"
 

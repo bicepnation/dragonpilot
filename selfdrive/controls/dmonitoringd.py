@@ -50,7 +50,7 @@ def dmonitoringd_thread(sm=None, pm=None):
   # 10Hz <- dmonitoringmodeld
   while True:
     cur_time = sec_since_boot()
-    if cur_time - last_ts >= 10.:
+    if cur_time - last_ts >= 5.:
       modified = dp_get_last_modified()
       if dp_last_modified != modified:
         dp_enable_driver_monitoring = False if params.get("DragonEnableDriverMonitoring", encoding='utf8') == "0" else True
