@@ -9,7 +9,7 @@ from selfdrive.car.honda.values import CruiseButtons, CAR, VISUAL_HUD
 from opendbc.can.packer import CANPacker
 from common.params import Params
 params = Params()
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 from common.dp import common_controller_update, common_controller_ctrl
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
@@ -112,7 +112,7 @@ class CarController():
 
     # dp
     if frame % 500 == 0:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if self.dp_last_modified != modified:
         self.dragon_lat_ctrl, \
         self.lane_change_enabled, \

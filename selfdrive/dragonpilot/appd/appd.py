@@ -8,7 +8,7 @@ from selfdrive.swaglog import cloudlog
 from common.realtime import sec_since_boot
 from common.params import Params, put_nonblocking
 params = Params()
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 from math import floor
 import re
 import os
@@ -357,7 +357,7 @@ def main():
     else:
       enabled_apps = []
       has_fullscreen_apps = False
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       for app in apps:
         # read params loop
         if last_modified != modified:

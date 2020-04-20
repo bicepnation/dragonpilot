@@ -5,7 +5,7 @@ from common.params import Params
 params = Params()
 import cereal.messaging as messaging
 from common.realtime import sec_since_boot
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 
 def main():
   thermal_sock = messaging.sub_sock('thermal')
@@ -20,7 +20,7 @@ def main():
   while 1:
     cur_time = sec_since_boot()
 
-    modified = dp_get_last_modified()
+    modified = get_last_modified()
     if dp_last_modified != modified:
       enabled = True if params.get("DragonEnableAutoShutdown", encoding='utf8') == '1' else False
       if enabled:

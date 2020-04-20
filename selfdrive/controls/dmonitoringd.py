@@ -7,7 +7,7 @@ from selfdrive.controls.lib.drive_helpers import create_event, EventTypes as ET
 from selfdrive.controls.lib.driver_monitor import DriverStatus, MAX_TERMINAL_ALERTS, MAX_TERMINAL_DURATION
 from selfdrive.locationd.calibration_helpers import Calibration
 params = Params()
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 
 def dmonitoringd_thread(sm=None, pm=None):
   gc.disable()
@@ -51,7 +51,7 @@ def dmonitoringd_thread(sm=None, pm=None):
   while True:
     cur_time = sec_since_boot()
     if cur_time - last_ts >= 5.:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if dp_last_modified != modified:
         dp_enable_driver_monitoring = False if params.get("DragonEnableDriverMonitoring", encoding='utf8') == "0" else True
         try:

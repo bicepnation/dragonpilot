@@ -11,7 +11,7 @@ from selfdrive.controls.lib.vehicle_model import VehicleModel
 from common.realtime import sec_since_boot
 from common.params import Params
 params = Params()
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 
 GearShifter = car.CarState.GearShifter
 
@@ -97,7 +97,7 @@ class CarInterfaceBase():
     # dp
     ts = sec_since_boot()
     if ts - self.ts_last_check >= 5.:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if self.dp_last_modified != modified:
         self.dragon_lat_ctrl = False if params.get("DragonLatCtrl", encoding='utf8') == "0" else True
         if self.dragon_lat_ctrl:

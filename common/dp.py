@@ -3,6 +3,9 @@ import subprocess
 from common.params import Params
 params = Params()
 
+def get_last_modified():
+  return Params().get('DragonLastModified', encoding='utf-8')
+
 def is_online():
   return not subprocess.call(["ping", "-W", "4", "-c", "1", "117.28.245.92"])
 

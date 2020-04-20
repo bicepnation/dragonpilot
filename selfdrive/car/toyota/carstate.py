@@ -7,7 +7,7 @@ from selfdrive.config import Conversions as CV
 from selfdrive.car.toyota.values import CAR, DBC, STEER_THRESHOLD, TSS2_CAR, NO_STOP_TIMER_CAR
 from common.realtime import sec_since_boot
 from common.params import Params
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 params = Params()
 
 class CarState(CarStateBase):
@@ -34,7 +34,7 @@ class CarState(CarStateBase):
     # dp
     ts = sec_since_boot()
     if ts - self.ts_last_check >= 5.:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if self.last_modifed != modified:
         self.dragon_toyota_stock_dsu = True if params.get("DragonToyotaStockDSU", encoding='utf8') == "1" else False
         self.last_modifed = modified

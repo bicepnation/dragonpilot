@@ -10,7 +10,7 @@ from common.params import Params
 import cereal.messaging as messaging
 from cereal import log
 # dragonpilot
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 
 LaneChangeState = log.PathPlan.LaneChangeState
 LaneChangeDirection = log.PathPlan.LaneChangeDirection
@@ -95,7 +95,7 @@ class PathPlanner():
     # dragonpilot
     cur_time = sec_since_boot()
     if cur_time - self.last_ts >= 5.:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if self.dp_last_modified != modified:
         self.lane_change_enabled = True if self.params.get("LaneChangeEnabled", encoding='utf8') == "1" else False
         if self.lane_change_enabled:

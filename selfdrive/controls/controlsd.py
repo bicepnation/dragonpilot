@@ -26,7 +26,7 @@ from selfdrive.controls.lib.vehicle_model import VehicleModel
 from selfdrive.controls.lib.planner import LON_MPC_STEP
 from selfdrive.locationd.calibration_helpers import Calibration, Filter
 # dp
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 
 LANE_DEPARTURE_THRESHOLD = 0.1
 STEER_ANGLE_SATURATION_TIMEOUT = 1.0 / DT_CTRL
@@ -560,7 +560,7 @@ def controlsd_thread(sm=None, pm=None, can_sock=None):
     # dp
     ts = start_time
     if ts - ts_last_check >= 5.:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if dp_last_modified != modified:
         dragon_toyota_stock_dsu = True if params.get("DragonToyotaStockDSU", encoding='utf8') == "1" else False
         dragon_lat_control = False if params.get("DragonLatCtrl", encoding='utf8') == "0" else True

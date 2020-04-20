@@ -13,7 +13,7 @@ from selfdrive.controls.lib.drive_helpers import MPC_COST_LONG
 from common.numpy_fast import interp, clip
 from selfdrive.config import Conversions as CV
 from common.params import Params
-from selfdrive.dragonpilot.dragonconf import dp_get_last_modified
+from common.dp import get_last_modified
 
 LOG_MPC = os.environ.get('LOG_MPC', False)
 
@@ -85,7 +85,7 @@ class LongitudinalMpc():
     # load profile
     ts = sec_since_boot()
     if ts - self.last_ts >= 5.:
-      modified = dp_get_last_modified()
+      modified = get_last_modified()
       if self.last_modified != modified:
         try:
           self.df_profile = int(self.params.get('DragonDynamicFollow', encoding='utf8'))
