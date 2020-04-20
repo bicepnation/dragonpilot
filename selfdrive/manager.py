@@ -585,14 +585,24 @@ def main():
   if params.get("Passive") is None:
     raise Exception("Passive must be set to continue")
 
+  reg = False if params.get("DragonEnableRegistration", encoding='utf8') == "0" else True
+
   if ANDROID:
     update_apks()
-  manager_init()
+  manager_init(reg)
   manager_prepare(spinner)
   spinner.close()
 
   if os.getenv("PREPAREONLY") is not None:
     return
+
+  # dp
+  if params.get("DragonEnableLogger", encoding='utf8') == "0":
+    del managed_processes['loggerd']
+    del managed_processes['tombstoned']
+
+  if params.get("DragonEnableUploader", encoding='utf8') == "0":
+    del managed_processes['uploader']
 
   # SystemExit on sigterm
   signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit(1))
