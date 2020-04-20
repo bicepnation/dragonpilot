@@ -274,7 +274,11 @@ class CarInterface(CarInterfaceBase):
       ret.longitudinalTuning.kpV = [1.2, 0.8, 0.5]
       ret.longitudinalTuning.kiV = [0.18, 0.12]
     else:
-      ret.gasMaxBP = [0.]
+      try:
+        max_bp = max(0., float(params.get("DragonToyotaSngResponse", encoding='utf8')))
+      except (TypeError, ValueError):
+        max_bp = 0.
+      ret.gasMaxBP = [max_bp]
       ret.gasMaxV = [0.5]
       ret.longitudinalTuning.kpV = [3.6, 2.4, 1.5]
       ret.longitudinalTuning.kiV = [0.54, 0.36]
