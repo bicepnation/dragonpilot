@@ -54,6 +54,9 @@ RUN pyenv rehash
 
 RUN pip install pipenv==2018.11.26
 
+# add a couple libs
+RUN pip install pyyaml==5.1.2 Cython==0.29.14 scons==3.1.1 pycapnp==0.6.4
+
 COPY Pipfile /tmp/
 COPY Pipfile.lock /tmp/
 
@@ -73,7 +76,6 @@ COPY ./.pylintrc /tmp/openpilot/
 
 COPY ./pyextra /tmp/openpilot/pyextra
 COPY ./phonelibs /tmp/openpilot/phonelibs
-COPY ./tools /tmp/openpilot/tools
 COPY ./common /tmp/openpilot/common
 COPY ./opendbc /tmp/openpilot/opendbc
 COPY ./cereal /tmp/openpilot/cereal
